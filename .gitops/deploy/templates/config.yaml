@@ -1,0 +1,18 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: helm-vault
+spec:
+  package: ghcr.io/hops-ops/helm-vault:{{ .Values.version }}
+{{- if .Values.skipDependencyResolution }}
+  skipDependencyResolution: true
+{{- end }}
+{{- if .Values.skipDependencyResolution }}
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: hops-ops-helm-vaultrender
+spec:
+  package: ghcr.io/hops-ops/helm-vaultrender:{{ .Values.version }}
+{{- end }}

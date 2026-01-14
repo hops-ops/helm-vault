@@ -1,0 +1,8 @@
+apiVersion: helm.hops.ops.com.ai/v1alpha1
+kind: Vault
+metadata:
+  name: e2e-vault
+  namespace: e2e-test
+spec:
+  clusterName: e2e-cluster
+  namespace: vault

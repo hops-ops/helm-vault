@@ -1,0 +1,24 @@
+apiVersion: helm.hops.ops.com.ai/v1alpha1
+kind: Vault
+metadata:
+  name: vault
+  namespace: example-env
+spec:
+  clusterName: my-cluster
+  namespace: vault
+  labels:
+    team: platform
+    environment: production
+  providerConfigRef:
+    name: my-cluster
+    kind: ProviderConfig
+  values:
+    server:
+      ha:
+        enabled: true
+        replicas: 3
+      dataStorage:
+        enabled: true
+        size: 10Gi
+    ui:
+      enabled: true

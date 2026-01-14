@@ -1,0 +1,36 @@
+{{- $state := $.state }}
+{{- $vault := $state.vault }}
+
+{{- /* Build Helm values */}}
+{{- $defaultValues := dict
+  "fullnameOverride" "vault"
+  "nameOverride" "vault"
+}}
+
+{{- $helmValues := dict }}
+{{- if $vault.overrideAllValues | len }}
+  {{- $helmValues = $vault.overrideAllValues }}
+{{- else }}
+  {{- $helmValues = mustMergeOverwrite $defaultValues $vault.values }}
+{{- end }}
+
+---
+apiVersion: helm.m.crossplane.io/v1beta1
+kind: Release
+metadata:
+  name: {{ $vault.name }}-helm-release
+  labels: {{ $vault.labels | toJson }}
+  annotations:
+    {{ setResourceNameAnnotation "helm-release" }}
+spec:
+  managementPolicies: {{ $vault.managementPolicies | toJson }}
+  providerConfigRef:
+    name: {{ $vault.providerConfigRef.name }}
+    kind: {{ $vault.providerConfigRef.kind }}
+  forProvider:
+    chart:
+      name: vault
+      repository: https://helm.releases.hashicorp.com
+      version: "0.30.0"
+    namespace: {{ $vault.namespace }}
+    values: {{ $helmValues | toJson }}
